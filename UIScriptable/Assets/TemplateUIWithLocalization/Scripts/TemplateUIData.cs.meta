@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c1cf3aebac1cce24b81487065c5ff4bc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - buttonSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  - buttonTextFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  - ordinaryTextFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  - headerTextFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
