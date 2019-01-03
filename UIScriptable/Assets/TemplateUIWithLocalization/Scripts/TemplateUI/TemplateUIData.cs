@@ -18,6 +18,11 @@ namespace TemplateUI
         public Font ordinaryTextFont;
         public Font headerTextFont;
 
+        [Header("Canvas Settings")]
+        public CanvasScaler.ScaleMode scaleMode;
+
+        public Vector2 referenceResolution;
+
         //public SpriteState buttonSpriteState;
     }
 }

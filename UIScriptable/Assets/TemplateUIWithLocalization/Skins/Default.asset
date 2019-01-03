@@ -18,3 +18,5 @@ MonoBehaviour:
   buttonTextFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   ordinaryTextFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   headerTextFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  scaleMode: 1
+  referenceResolution: {x: 640, y: 1136}
