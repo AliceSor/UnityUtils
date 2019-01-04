@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   buttonSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  buttonColor: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 1}
+  buttonWidth: 412.2
+  buttonHeight: 55.5
   buttonTextColor: {r: 0, g: 0, b: 0, a: 1}
-  ordinaryTextColor: {r: 0, g: 0, b: 0, a: 1}
-  headerTextColor: {r: 0, g: 1, b: 0.8384063, a: 1}
-  buttonTextFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-  ordinaryTextFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-  headerTextFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  ordinaryTextColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
+  headerTextColor: {r: 0.9811321, g: 0.9811321, b: 0.9811321, a: 1}
+  buttonTextFont: {fileID: 12800000, guid: ce9c9ac062897c64bb8a79c5cc97bb46, type: 3}
+  ordinaryTextFont: {fileID: 12800000, guid: ce9c9ac062897c64bb8a79c5cc97bb46, type: 3}
+  headerTextFont: {fileID: 12800000, guid: ce9c9ac062897c64bb8a79c5cc97bb46, type: 3}
+  buttonTextSize: 28
+  ordinaryTextSize: 31
+  headerTextSize: 71
   scaleMode: 1
   referenceResolution: {x: 640, y: 1136}

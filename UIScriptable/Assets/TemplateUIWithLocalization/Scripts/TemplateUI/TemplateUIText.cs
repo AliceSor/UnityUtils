@@ -11,6 +11,8 @@ namespace TemplateUI
         public enum TextType { HEAD, BUTTON, ORDINARY }
         public TextType textType;
 
+        public bool useDefaultTextSize = true;
+
         private Text text;
 
         protected override void OnSkinUI()
@@ -21,6 +23,8 @@ namespace TemplateUI
 
             if (skinData != null && text != null)
             {
+                text.horizontalOverflow = HorizontalWrapMode.Overflow;
+                text.verticalOverflow = VerticalWrapMode.Overflow;
                 switch (textType)
                 {
                     case TextType.BUTTON:
@@ -28,18 +32,27 @@ namespace TemplateUI
                             text.color = skinData.buttonTextColor;
                             text.font = skinData.buttonTextFont;
                             text.alignment = TextAnchor.MiddleCenter;
+
+                            if (useDefaultTextSize)
+                                text.fontSize = skinData.buttonTextSize;
                             break;
                         }
                     case TextType.ORDINARY:
                         {
                             text.color = skinData.ordinaryTextColor;
                             text.font = skinData.ordinaryTextFont;
+
+                            if (useDefaultTextSize)
+                                text.fontSize = skinData.ordinaryTextSize;
                             break;
                         }
                     case TextType.HEAD:
                         {
                             text.color = skinData.headerTextColor;
                             text.font = skinData.headerTextFont;
+
+                            if (useDefaultTextSize)
+                                text.fontSize = skinData.headerTextSize;
                             break;
                         }
                 }
