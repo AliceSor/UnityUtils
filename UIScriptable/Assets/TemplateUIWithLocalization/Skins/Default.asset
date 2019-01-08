@@ -23,6 +23,12 @@ MonoBehaviour:
   headerTextFont: {fileID: 12800000, guid: ce9c9ac062897c64bb8a79c5cc97bb46, type: 3}
   buttonTextSize: 28
   ordinaryTextSize: 31
-  headerTextSize: 71
+  headerTextSize: 35
   scaleMode: 1
   referenceResolution: {x: 640, y: 1136}
+  backgroundColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  topBarColor: {r: 0.4509804, g: 0.4509804, b: 0.4509804, a: 1}
+  topBarHeight: 100
+  sideMenuBackgroundColor: {r: 0.65, g: 0.65, b: 0.65, a: 1}
+  sideMenuButtonSprite: {fileID: 0}
+  sideMenuButtonColor: {r: 0, g: 0, b: 0, a: 0}

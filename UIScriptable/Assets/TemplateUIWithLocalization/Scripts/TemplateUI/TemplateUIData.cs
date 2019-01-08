@@ -29,6 +29,14 @@ namespace TemplateUI
         public CanvasScaler.ScaleMode scaleMode;
         public Vector2 referenceResolution;
 
-        
+        public Color backgroundColor;
+        public Color topBarColor;
+
+        public float topBarHeight;
+
+        [Header("SideBar Settings")]
+        public Color sideMenuBackgroundColor;
+        public Sprite sideMenuButtonSprite;
+        public Color sideMenuButtonColor;
     }
 }

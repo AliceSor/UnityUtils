@@ -8,31 +8,87 @@ public class SideMenuController : MonoBehaviour
 {
     public float speed = 10;
 
+    public Image shadowTint;
+    public Button closeButton;
+
     private Slider slider;
+    private Color tintColor;
+    private int isAnimation = 0;
 
     private void Start()
     {
         slider = GetComponent<Slider>();
+        tintColor = new Color(0, 0, 0, 0);
     }
 
     private void Update()
     {
+        //sideMenu between opened and closed state
         if (slider.value > 0 && slider.value < 1)
         {
-            if (!IsTouched())
+            shadowTint.enabled = true;
+            tintColor.a = slider.value / 2;
+            shadowTint.color = tintColor;
+
+            if (isAnimation != 0)
             {
-                if (slider.value < 0.4)
-                {
-                    slider.value = slider.value - speed * Time.deltaTime;
-                }
-                else
-                {
-                    slider.value = slider.value + speed * Time.deltaTime;
-                }
+                slider.value = (isAnimation > 0) ? slider.value + speed * Time.deltaTime : slider.value - speed * Time.deltaTime;
+                Debug.Log("Animation " + slider.value );
             }
             else
-                Debug.Log("Touched");
+            {
+                if (!IsTouched())
+                {
+                    if (slider.value < 0.4)
+                    {
+                        slider.value = slider.value - speed * Time.deltaTime;
+                    }
+                    else
+                    {
+                        slider.value = slider.value + speed * Time.deltaTime;
+                    }
+                }
+                else // Touched in current time
+                {
+                    Debug.Log("Touched");
+                }
+            }
         }
+        //sideMenu in closed state
+        else if (slider.value == 0)
+        {
+            shadowTint.enabled = false;
+            closeButton.enabled = false;
+            isAnimation = 0;
+        }
+        //sideMenu in opened state
+        else if (slider.value == 1)
+        {
+            closeButton.enabled = true;
+            isAnimation = 0;
+        }
+        else
+        {
+            closeButton.enabled = false;
+            isAnimation = 0;
+        }
+
+      
+        
+    }
+
+    public void StartHiding()
+    {
+        slider.value = 0.9f;
+        isAnimation = -1;
+        closeButton.enabled = false;
+    }
+
+    public void StartOpening()
+    {
+        slider.value = 0.1f;
+        isAnimation = 1;
+        Debug.Log("Openning");
     }
 
     private bool IsTouched()
