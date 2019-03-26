@@ -6,7 +6,8 @@ using UnityEngine.Events;
 
 namespace Localization
 {
-    public class LocalizationManager : MonoBehaviour
+    [CreateAssetMenu()]
+    public class LocalizationManager : ScriptableObject
     {
         private Dictionary<string, string> localizedText;
 
@@ -17,28 +18,43 @@ namespace Localization
         [Space(10)]
         public LanguichPath[] languages;
 
+        /// <summary>
+        /// When Language changed
+        /// </summary>
         [HideInInspector]
         public UnityEvent languageSetEvent = new UnityEvent();
 
         public static LocalizationManager instanse;
-
-        private void Start()
+        public static List<LocalizedText> texts = new List<LocalizedText>();
+      
+      
+        private void OnEnable()
         {
             if (instanse == null)
                 instanse = this;
-            else if (instanse != this)
-                Destroy(gameObject);
+           // else if (instanse != this)
+//                Destroy(gameObject);
             //if (languageSetEvent == null)
             //    languageSetEvent = new UnityEvent();
+            languageSetEvent.AddListener(SetInDisabled);
             Debug.Log("start");
             SetLanguage();
-            DontDestroyOnLoad(gameObject);
-
         }
 
-        public void Test()
+        public void SetInDisabled()
         {
-            Debug.Log("event work");
+            Debug.Log("Setting value in disabled text");
+            foreach (var i in texts)
+            {
+                if (i != null)
+                {
+                    if (!i.gameObject.activeSelf)
+                    {
+                        i.SetText();
+                        Debug.Log("Setted in disabled");
+                    }
+                }
+            }
         }
 
         public void ChangeLanguage(string language)
@@ -47,10 +63,19 @@ namespace Localization
             SetLanguage();
             if (languageSetEvent != null)
             {
+#if !UNITY_ANDROID
                 Debug.Log("Invoke");
                 //languageSetEvent.AddListener(Test);
                 languageSetEvent.Invoke();
+#endif
             }
+        }
+
+        public void SetLanguage(string language)
+        {
+            Debug.Log("Choosed language: " + language);
+            currentLanguage = language;
+            SetLanguage();
         }
 
         public void SetLanguage()
@@ -76,7 +101,17 @@ namespace Localization
         public void LoadLocalizedText(string fileName)
         {
             localizedText = new Dictionary<string, string>();
+#if UNITY_ANDROID && !UNITY_EDITOR
+            string filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", fileName);
+            StartCoroutine(LoadTextFromAndroid(filePath));
+            return;
+#elif UNITY_IOS && !UNITY_EDITOR
+             string filePath = Path.Combine(Application.dataPath + "/Raw", fileName);
+            
+
+#elif UNITY_EDITOR
             string filePath = Path.Combine(Application.streamingAssetsPath, fileName);
+#endif
 
             if (File.Exists(filePath))
             {
@@ -89,6 +124,7 @@ namespace Localization
                 }
                 Debug.Log("Text loaded" + dataAsJson);
                 isReady = true;
+                languageSetEvent.Invoke();
 
             }
             else
@@ -97,14 +133,48 @@ namespace Localization
             }
         }
 
+        //just on Android Device
+        IEnumerator LoadTextFromAndroid(string filePath)
+        {
+            WWW www = new WWW(filePath);
+            while (!www.isDone)
+            {
+                yield return null;
+            }
+           if (string.IsNullOrEmpty(www.error))
+            {
+                string dataAsJson = www.text;
+                LocalizationData loadedData = JsonUtility.FromJson<LocalizationData>(dataAsJson);
+
+                for (int i = 0; i < loadedData.items.Length; i++)
+                {
+                    localizedText.Add(loadedData.items[i].key, loadedData.items[i].value);
+                }
+                Debug.Log("Text loaded" + dataAsJson);
+                isReady = true;
+                if (languageSetEvent != null)
+                {
+
+                Debug.Log("Invoke");
+                //languageSetEvent.AddListener(Test);
+                languageSetEvent.Invoke();
+
+                }
+            }
+        }
+
         public string GetLocalizedValue(string key)
         {
             string result = null;
 
-            if (localizedText.ContainsKey(key))
+            if (localizedText != null)
             {
-                return localizedText[key];
+                if (localizedText.ContainsKey(key))
+                {
+                    return localizedText[key];
+                }
             }
+            
 
             return result;
         }
@@ -115,7 +185,11 @@ namespace Localization
         {
             languageSetEvent.RemoveAllListeners();
         }
-    }
+
+        
+    } //LocalizationManager
+
+   
 
     [System.Serializable]
     public struct LanguichPath

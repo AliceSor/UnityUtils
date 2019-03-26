@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/TemplateUIWithLocalization/Scenes/Scene2.unity
-    guid: ec82d74a12be1394e85ceec164311f70
-  - enabled: 1
     path: Assets/TemplateUIWithLocalization/Scenes/Scene0.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/TemplateUIWithLocalization/Scenes/Scene2.unity
+    guid: ec82d74a12be1394e85ceec164311f70
   - enabled: 1
     path: Assets/TemplateUIWithLocalization/Scenes/Scene1.unity
     guid: ca688efa080e3be4da5d17374043a60d
