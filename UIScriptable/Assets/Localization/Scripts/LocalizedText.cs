@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 namespace Localization
 {
+    [RequireComponent(typeof(TextComponentHandler))]
     public class LocalizedText : MonoBehaviour
     {
         public string key;
@@ -17,18 +18,21 @@ namespace Localization
         private bool textSetted = true;
         TextMeshProUGUI textmeshPro;
 
+        TextComponentHandler textComponentHandler;
+
         private bool subscribed = false;
 
         public LocalizedText()
         {
-           // Debug.Log("Constructor");
             Subscribe();
         }
-        
+
         IEnumerator Start()
         {
             yield return new WaitForEndOfFrame();
             //  if (LocalizationManager.instanse.languageSetEvent != null)
+
+            textComponentHandler = GetComponent<TextComponentHandler>();
 
             text = GetComponent<Text>();
             textmeshPro = GetComponent<TextMeshProUGUI>();
@@ -54,24 +58,7 @@ namespace Localization
 
         public void Subscribe()
         {
-//            if (!subscribed)
-//            {
-//                if (LocalizationManager.instanse != null)
-//                {
-//                    LocalizationManager.instanse.languageSetEvent.AddListener(SetText);
-//                    subscribed = true;
-//                    Debug.Log("Add listener");
-//                    if (LocalizationManager.instanse.GetIsReady())
-//                        SetText();
-//
-//                }
-//                else
-//                    Debug.Log("No LocalizationManager");
-//            }
             LocalizationManager.texts.Add(this);
-            
-//                Debug.Log(LocalizationManager.texts.Count);
-            
         }
 
         private void OnEnable()
@@ -83,39 +70,42 @@ namespace Localization
         {
             Debug.Log("Setting texxt");
 
-            try
-            {
-                text = GetComponent<Text>();
-                textmeshPro = GetComponent<TextMeshProUGUI>();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            
+            // try
+            // {
+            //     text = GetComponent<Text>();
+            //     textmeshPro = GetComponent<TextMeshProUGUI>();
+            // }
+            // catch (Exception e)
+            // {
+            //     Console.WriteLine(e);
+            //     throw;
+            // }
+             textComponentHandler = GetComponent<TextComponentHandler>();
+
             if (LocalizationManager.instanse != null)
             {
                 string res = LocalizationManager.instanse.GetLocalizedValue(key);
                 if (res != null)
                 {
-                    if (text != null)
-                        text.text = res;
+                    textComponentHandler.SetText(res);
+                    // if (text != null)
+                    //     text.text = res;
 
-                    else if (textmeshPro != null)
-                        textmeshPro.SetText(res);
-                    else
-                        Debug.Log("Cannot find text component");
+                    // else if (textmeshPro != null)
+                    //     textmeshPro.SetText(res);
+                    // else
+                    //     Debug.Log("Cannot find text component");
                 }
                 else
                 {
-                    if (text != null)
-                        text.text = defaultValue;
+                    textComponentHandler.SetText(defaultValue);
+                    // if (text != null)
+                    //     text.text = defaultValue;
 
-                    else if (textmeshPro != null)
-                        textmeshPro.SetText(defaultValue);
-                    else
-                        Debug.Log("Cannot find text component");
+                    // else if (textmeshPro != null)
+                    //     textmeshPro.SetText(defaultValue);
+                    // else
+                    //     Debug.Log("Cannot find text component");
                 }
                 textSetted = true;
             }
