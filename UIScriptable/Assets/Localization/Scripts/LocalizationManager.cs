@@ -6,7 +6,8 @@ using UnityEngine.Events;
 
 namespace Localization
 {
-    public class LocalizationManager : MonoBehaviour
+    [CreateAssetMenu()]
+    public class LocalizationManager : ScriptableObject
     {
         private Dictionary<string, string> localizedText;
 
@@ -17,28 +18,43 @@ namespace Localization
         [Space(10)]
         public LanguichPath[] languages;
 
+        /// <summary>
+        /// When Language changed
+        /// </summary>
         [HideInInspector]
         public UnityEvent languageSetEvent = new UnityEvent();
 
         public static LocalizationManager instanse;
-
-        private void Start()
+        public static List<LocalizedText> texts = new List<LocalizedText>();
+      
+      
+        private void OnEnable()
         {
             if (instanse == null)
                 instanse = this;
-            else if (instanse != this)
-                Destroy(gameObject);
+           // else if (instanse != this)
+//                Destroy(gameObject);
             //if (languageSetEvent == null)
             //    languageSetEvent = new UnityEvent();
+            languageSetEvent.AddListener(SetInDisabled);
             Debug.Log("start");
             SetLanguage();
-            DontDestroyOnLoad(gameObject);
-
         }
 
-        public void Test()
+        public void SetInDisabled()
         {
-            Debug.Log("event work");
+            Debug.Log("Setting value in disabled text");
+            foreach (var i in texts)
+            {
+                if (i != null)
+                {
+                    if (!i.gameObject.activeSelf)
+                    {
+                        i.SetText();
+                        Debug.Log("Setted in disabled");
+                    }
+                }
+            }
         }
 
         public void ChangeLanguage(string language)
@@ -53,6 +69,13 @@ namespace Localization
                 languageSetEvent.Invoke();
 #endif
             }
+        }
+
+        public void SetLanguage(string language)
+        {
+            Debug.Log("Choosed language: " + language);
+            currentLanguage = language;
+            SetLanguage();
         }
 
         public void SetLanguage()
@@ -101,6 +124,7 @@ namespace Localization
                 }
                 Debug.Log("Text loaded" + dataAsJson);
                 isReady = true;
+                languageSetEvent.Invoke();
 
             }
             else
@@ -143,10 +167,14 @@ namespace Localization
         {
             string result = null;
 
-            if (localizedText.ContainsKey(key))
+            if (localizedText != null)
             {
-                return localizedText[key];
+                if (localizedText.ContainsKey(key))
+                {
+                    return localizedText[key];
+                }
             }
+            
 
             return result;
         }
@@ -158,10 +186,7 @@ namespace Localization
             languageSetEvent.RemoveAllListeners();
         }
 
-        private void OnGUI()
-        {
-            GUI.Label(new Rect(10, 10, 1000, 2000), "Hello World!");
-        }
+        
     } //LocalizationManager
 
    
