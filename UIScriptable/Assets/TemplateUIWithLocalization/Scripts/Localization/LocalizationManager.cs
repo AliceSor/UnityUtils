@@ -47,9 +47,11 @@ namespace Localization
             SetLanguage();
             if (languageSetEvent != null)
             {
+#if !UNITY_ANDROID
                 Debug.Log("Invoke");
                 //languageSetEvent.AddListener(Test);
                 languageSetEvent.Invoke();
+#endif
             }
         }
 
@@ -76,7 +78,17 @@ namespace Localization
         public void LoadLocalizedText(string fileName)
         {
             localizedText = new Dictionary<string, string>();
+#if UNITY_ANDROID && !UNITY_EDITOR
+            string filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", fileName);
+            StartCoroutine(LoadTextFromAndroid(filePath));
+            return;
+#elif UNITY_IOS && !UNITY_EDITOR
+             string filePath = Path.Combine(Application.dataPath + "/Raw", fileName);
+            
+
+#elif UNITY_EDITOR
             string filePath = Path.Combine(Application.streamingAssetsPath, fileName);
+#endif
 
             if (File.Exists(filePath))
             {
@@ -94,6 +106,36 @@ namespace Localization
             else
             {
                 Debug.LogError("File not found");
+            }
+        }
+
+        //just on Android Device
+        IEnumerator LoadTextFromAndroid(string filePath)
+        {
+            WWW www = new WWW(filePath);
+            while (!www.isDone)
+            {
+                yield return null;
+            }
+           if (string.IsNullOrEmpty(www.error))
+            {
+                string dataAsJson = www.text;
+                LocalizationData loadedData = JsonUtility.FromJson<LocalizationData>(dataAsJson);
+
+                for (int i = 0; i < loadedData.items.Length; i++)
+                {
+                    localizedText.Add(loadedData.items[i].key, loadedData.items[i].value);
+                }
+                Debug.Log("Text loaded" + dataAsJson);
+                isReady = true;
+                if (languageSetEvent != null)
+                {
+
+                Debug.Log("Invoke");
+                //languageSetEvent.AddListener(Test);
+                languageSetEvent.Invoke();
+
+                }
             }
         }
 
@@ -115,7 +157,14 @@ namespace Localization
         {
             languageSetEvent.RemoveAllListeners();
         }
-    }
+
+        private void OnGUI()
+        {
+            GUI.Label(new Rect(10, 10, 1000, 2000), "Hello World!");
+        }
+    } //LocalizationManager
+
+   
 
     [System.Serializable]
     public struct LanguichPath
