@@ -190,7 +190,7 @@ namespace Localization
     } //LocalizationManager
 
    
-
+    //Please rename it
     [System.Serializable]
     public struct LanguichPath
     {

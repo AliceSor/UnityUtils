@@ -1,66 +1,52 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace SavingSystem
 {
-    public class Test
-    {
-        public Vector3 v3;
-        private string priv = "private";
-        public string pub;
-        public string str;
-        protected string prot = "protecred";
-        public List<int> lst;
-        public PersistentData OGGG;
-        public bool enabled = true;
-    }
-
-
-    [CreateAssetMenu(fileName = "PersistentDataHandler", menuName = "Custom/Saving/PersistentDataHandler")]
-    public class PersistentDataHandler : ScriptableObject
+    public class SaverSO<T> : ScriptableObject where T : class
     {
         public string filename = "PersistentData";
-        public PersistentData persistentData;
-
+        public T persistentData;
         public bool isFirstApplicationLauch = true;
+        public bool enabled = true;
 
-        //In case sript will be enabled when changing scene
-        private bool firstLoad = true;
-        public bool enabled = false;
+        private string jsonString;
 
         void OnEnable()
         {
             if (enabled)
             {
+                Debug.Log(this.name + " Enabled");
+
                 LoadProgres();
+                persistentData = GetData();
                 Application.quitting += SaveProgres;
             }
         }
 
-        public T GetData<T>()
-        {
-            var t = new Test();
-            List<int> l = new List<int>() { 1, 2, 3 };
-            t.lst = l;
-            t.OGGG = new PersistentData();
-
-            // var j = JsonConvert.SerializeObject(t, Formatting.Indented);
-            var j1 = JsonUtility.ToJson(t);
-
-            T res = JsonUtility.FromJson<T>(j1);
-           // T res = JsonConvert.DeserializeObject<T>(j.ToString());
-            return res;
-        }
-
         void OnDestroy()
         {
-            Debug.Log("PersistentDataHandler Destroyed");
+            if (enabled)
+            {
+                Debug.Log(this.name + " Destroyed");
 
-            SaveProgres();
+                SaveProgres();
+            }
+        }
+
+        private T GetData()
+        {
+            //TODO : try - catch
+            T res;
+            if (!string.IsNullOrEmpty(jsonString))
+                res = JsonUtility.FromJson<T>(jsonString);
+            else
+                return null;
+            return res;
         }
 
         public void SaveProgres()
@@ -70,7 +56,7 @@ namespace SavingSystem
             {
                 BinaryFormatter bf = new BinaryFormatter();
                 FileStream file = File.Create(Application.persistentDataPath + filename);
-                bf.Serialize(file, persistentData);
+                bf.Serialize(file, jsonString);
                 file.Close();
                 Debug.Log("Progress saved");
             }
@@ -78,9 +64,9 @@ namespace SavingSystem
             {
                 Debug.LogException(e, this);
             }
-        }
+        }//SaveProgres
 
-        public void LoadProgres()
+        private void LoadProgres()
         {
             if (File.Exists(Application.persistentDataPath + filename))
             {
@@ -88,7 +74,7 @@ namespace SavingSystem
                 {
                     BinaryFormatter bf = new BinaryFormatter();
                     FileStream file = File.Open(Application.persistentDataPath + filename, FileMode.Open);
-                    persistentData = (PersistentData)bf.Deserialize(file);
+                    jsonString = (string)bf.Deserialize(file);
                     file.Close();
                     isFirstApplicationLauch = false;
                     Debug.Log("Found progress file");
@@ -100,9 +86,9 @@ namespace SavingSystem
             }
             else
             {
-                persistentData = new PersistentData();
+                jsonString = "";
             }
-        }
+        }// LoadProgres
 
         public void DeleteProgress()
         {
@@ -111,14 +97,15 @@ namespace SavingSystem
                 try
                 {
                     File.Delete(Application.persistentDataPath + filename);
-                    persistentData = new PersistentData();
+                   // persistentData = new T();
                 }
                 catch (Exception e)
                 {
                     Debug.LogException(e, this);
                 }
             }
-        }
+        }// DeleteProgress
 
-    }//PersistensDataHandler
-}
+    }// SaverSO<T> 
+
+}// namespace SavingSystem
