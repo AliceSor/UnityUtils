@@ -11,12 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a199279fadcb2e64bb20fa0ae9a58ead, type: 3}
   m_Name: CustomExampleSaver
   m_EditorClassIdentifier: 
-  filename: SavedData
+  filename: SavedData.dat
   persistentData:
-    ApplicationFirstLoad: 0
-    fullscreen: 0
-    soundVolume: 0
-    musicVolume: 0
+    ApplicationFirstLoad: 1
+    fullscreen: 1
+    soundVolume: 0.345
+    musicVolume: 0.55
     userName: 
   isFirstApplicationLauch: 0
-  enabled: 1
+  autoLoad: 1
+  encrypt: 1

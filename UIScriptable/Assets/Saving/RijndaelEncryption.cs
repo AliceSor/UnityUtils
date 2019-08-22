@@ -4,6 +4,10 @@ using System.Text;
 using System.Security.Cryptography;
 using UnityEngine;
 
+
+//From https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography.rijndael?view=netframework-4.8
+// and under guide https://www.youtube.com/watch?v=SXa6jSW7ckY&t=1809s
+
 public class RijndaelEncryption
 {
 
